@@ -1,0 +1,85 @@
+Epoch : 0.000000
+Avg_loss_traing: 0.549905
+Acc_training: 0.801369
+Avg_loss_validation: 0.512315
+Acc_validation: 0.797381 
+Epoch : 1.000000
+Avg_loss_traing: 0.496922
+Acc_training: 0.833452
+Avg_loss_validation: 0.483494
+Acc_validation: 0.825238 
+Epoch : 2.000000
+Avg_loss_traing: 0.484295
+Acc_training: 0.842589
+Avg_loss_validation: 0.477468
+Acc_validation: 0.832857 
+Epoch : 3.000000
+Avg_loss_traing: 0.472883
+Acc_training: 0.833839
+Avg_loss_validation: 0.482609
+Acc_validation: 0.822143 
+Epoch : 0.000000
+Avg_loss_traing: 0.559153
+Acc_training: 0.782857
+Avg_loss_validation: 0.528379
+Acc_validation: 0.784048 
+Epoch : 1.000000
+Avg_loss_traing: 0.497984
+Acc_training: 0.821548
+Avg_loss_validation: 0.486757
+Acc_validation: 0.819524 
+Epoch : 2.000000
+Avg_loss_traing: 0.485075
+Acc_training: 0.838512
+Avg_loss_validation: 0.475098
+Acc_validation: 0.833333 
+Epoch : 0.000000
+Avg_loss_traing: 0.554998
+Acc_training: 0.821488
+Avg_loss_validation: 0.499257
+Acc_validation: 0.812619 
+Epoch : 1.000000
+Avg_loss_traing: 0.489182
+Acc_training: 0.842619
+Avg_loss_validation: 0.475118
+Acc_validation: 0.831667 
+Epoch : 2.000000
+Avg_loss_traing: 0.479386
+Acc_training: 0.840833
+Avg_loss_validation: 0.476056
+Acc_validation: 0.829048 
+Epoch : 3.000000
+Avg_loss_traing: 0.469818
+Acc_training: 0.799464
+Avg_loss_validation: 0.514926
+Acc_validation: 0.785714 
+Epoch : 4.000000
+Avg_loss_traing: 0.467922
+Acc_training: 0.846994
+Avg_loss_validation: 0.470490
+Acc_validation: 0.834286 
+Epoch : 5.000000
+Avg_loss_traing: 0.467908
+Acc_training: 0.856756
+Avg_loss_validation: 0.467827
+Acc_validation: 0.835238 
+Epoch : 6.000000
+Avg_loss_traing: 0.459164
+Acc_training: 0.851726
+Avg_loss_validation: 0.471309
+Acc_validation: 0.832143 
+Epoch : 7.000000
+Avg_loss_traing: 0.462258
+Acc_training: 0.854613
+Avg_loss_validation: 0.470594
+Acc_validation: 0.836429 
+Epoch : 8.000000
+Avg_loss_traing: 0.457396
+Acc_training: 0.860536
+Avg_loss_validation: 0.464491
+Acc_validation: 0.841905 
+Epoch : 9.000000
+Avg_loss_traing: 0.456652
+Acc_training: 0.855625
+Avg_loss_validation: 0.476371
+Acc_validation: 0.826190 

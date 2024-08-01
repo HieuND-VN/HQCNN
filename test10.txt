@@ -1,0 +1,10 @@
+Epoch : 3.000000
+Avg_loss_traing: 0.477017
+Acc_training: 0.846577
+Avg_loss_validation: 0.467403
+Acc_validation: 0.838571 
+Epoch : 4.000000
+Avg_loss_traing: 0.474358
+Acc_training: 0.846518
+Avg_loss_validation: 0.467860
+Acc_validation: 0.838095 
