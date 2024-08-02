@@ -1,6 +1,7 @@
 import time
 import argparse
 import torch 
+from System Model import SysMod
 
 if __name__ == "__main__":
     total_start = time.time()
@@ -21,4 +22,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.device == "cuda" and not torch.cuda.is_available():
         print("\ncuda is not avaiable.\n")
-        args.device = "cpu"
+    
+    system = SysMod(args)
+    
