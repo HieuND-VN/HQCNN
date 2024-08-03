@@ -1,154 +1,38 @@
 import os
+import numpy as np
 from numpy import vstack
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv1D, MaxPooling1D, GlobalMaxPooling1D, LSTM, Bidirectional
-import tensorflow as tf
-
-import numpy as np
-import tensorflow as tf
-from sklearn.decomposition import PCA
-from tensorflow.keras.models import Model
-from tensorflow.keras import layers, losses
-import matplotlib.pyplot as plt
+from torchsummary import summary as summary
 import pennylane as qml
 from pennylane import numpy as np
-import autograd.numpy as anp
-from pennylane.templates.embeddings import AmplitudeEmbedding, AngleEmbedding
-from pennylane.templates.state_preparations import MottonenStatePreparation
-from pennylane.templates import RandomLayers
-from sklearn.preprocessing import normalize
 import torch
-from torchsummary import summary as summary
+
+
+
+class HQCNN():
+    def __init__(self, args):
+        self.num_train = args.num_train
+        self.num_test = args.num_test
+        self.num_ap = args.num_ap
+        self.num_ue = args.num_ue
+        self.tau_p = args.tau_p
+
+    def training_generator(self):
+        data =
+
+
+
+
+
+
+
+
+
+
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-def import_from_files():
-
-    rootdir = './dataset/'
-    output_arr = []
-    val_arr = []
-    first = 1
-    for dirpath, dirnames, filenames in os.walk(rootdir):
-        for file in filenames:
-            filename = os.path.join(dirpath, file)
-            print(filename)
-            output_data = []
-            df = pd.read_csv(filename, sep=',', header=0)
-            input_data = df.values
-            for item in input_data:
-                item[15:] = item[15:] / item[2]
-            randomize = np.arange(len(input_data))
-            np.random.shuffle(randomize)
-            random_data = input_data[randomize]
-            if first > 0:
-                first = 0
-                output_arr = random_data
-            else:
-                output_arr = vstack((output_arr, random_data))
-
-    return output_arr
-data = import_from_files()
-print(f'------- data[0]: {np.shape(data[0])}')
-test_data = data[37800:, :]
-print(f'test dataset: {test_data.shape}') #testing is 4200 samples cuoi cung
-trainval_data = data[:37800, :]
-print(f'train-val dataset: {trainval_data.shape}') #training and validating dataset is 37800 samples dau tien
-
-x_train = trainval_data[:33600, 15:]
-x_train = x_train
-y_train = trainval_data[:33600, 0]
-
-x_test = test_data[:, 15:]
-x_test = x_test
-y_test = test_data[:, 0]
-
-x_val = trainval_data[33600:, 15:]
-y_val = trainval_data[33600:, 0]
-
-print("=" * 30)
-# print(f'data shape: {data.shape}')
-# print(f'data type: {type(data)}')
-# print(f'data sample [0] - type: {type(data[0])}')
-# print(f'data sample [0] - length: {len(data[0])}')
-# print(f'data sample [0 content: {data[0]}')
-
-print("=" * 30)
-# print(f'\nTRAINING')
-# print(f"x_train.shape: {x_train.shape}")
-# print(f"x_train.type: {type(x_train)}")
-# print(f"y_train.shape: {y_train.shape}")
-# print(f"y_train.type: {type(y_train)}")
-print(f'\nVALIDATING')
-# print(f"x_val.shape: {x_val.shape}")
-print(f"y_val.shape: {y_val.shape}")
-print(f"y_val.type: {type(y_val)}")
-print(f'y_val[0:50]: {y_val[0:10]}')
-y_val_test = np.array([0., 1., 1., 0., 1., 1., 1., 1., 0., 1.])
-print(y_val_test==y_val[0:10])
-# print(f'\nTESTING')
-# print(f"x_test.shape: {x_test.shape}")
-# print(f"y_test.shape: {y_test.shape}")
-print("=" * 30)
-
-x_train_filter_01 = np.where((y_train == 0) | (y_train == 1))
-print(x_train_filter_01)
-x_val_filter_01 = np.where((y_val == 0) | (y_val == 1))
-x_test_filter_01 = np.where((y_test == 0) | (y_test == 1))
-
-X_train, X_val, X_test = x_train[x_train_filter_01], x_val[x_val_filter_01], x_test[x_test_filter_01]
-print("_" * 30)
-# print(f'X_train - type: {type(X_train)}')
-# print(f'X_train - shape: {np.shape(X_train)}')
-# print(f'len(X_train): {len(X_train)}')
-# print(f'X_train[0] - type: {type(X_train[0])}')
-# print(f'X_train[0] - shape: {np.shape(X_train[0])}')
-
-# x_axis = np.linspace(0,len(X_train[0]), len(X_train[0]))
-# plt.scatter(x_axis, X_train[0])
-# plt.show()
-Y_train, Y_val, Y_test = y_train[x_train_filter_01], y_val[x_val_filter_01], y_test[x_test_filter_01]
-print(f'\t\t Y_val - type: {type(Y_val)}')
-print(f'\t\t Y_val - type: {np.shape(Y_val)}')
-Y_train = [1 if y == 1 else 0 for y in Y_train]
-Y_val_1 = [1 if y == 1 else 0 for y in Y_val]
-Y_val = [1 if y == 1 else 0 for y in Y_val]
-print(f'\t\t\t Y_val - type: {type(Y_val)}')
-print(f'\t\t\t Y_val - type: {np.shape(Y_val)}')
-print(f'Compare {Y_val_1 == Y_val} - {y_val == Y_val}')
-Y_test = [1 if y == 1 else 0 for y in Y_test]
-print(f'\tY_train - type: {type(Y_train)}')
-print(f'\tY_train - shape: {np.shape(Y_train)}')
-print(f'\tY_train[0] - type: {type(Y_train[0])}')
-# print(f'\tY_train[0] - shape: {Y_train}')
-
-
-
-Y_train_ = torch.unsqueeze(torch.tensor(Y_train), 1)
-Y_val_ = torch.unsqueeze(torch.tensor(Y_val), 1)
-print(f'Y_val_: {Y_val_.shape}')
-Y_test_ = torch.unsqueeze(torch.tensor(Y_test), 1)
-Y_train_hot = torch.scatter(torch.zeros((len(X_train), 2)), 1, Y_train_, 1)
-Y_val_hot = torch.scatter(torch.zeros((len(X_val), 2)), 1, Y_val_, 1)
-print(len(X_val))
-print(f'Y_val_hot - TYPE: {type(Y_val_hot)}')
-print(f'Y_val_hot - shape: {Y_val_hot.shape}')
-print(f'Y_val_hot[0]: {Y_val_hot[0]}')
-Y_test_hot = torch.scatter(torch.zeros((len(X_test), 2)), 1, Y_test_, 1)
-
-X_train = torch.tensor(X_train).float()
-X_val = torch.tensor(X_val).float()
-X_test = torch.tensor(X_test).float()
-data_loader = torch.utils.data.DataLoader(
-    list(
-        zip(X_train, Y_train_hot)), batch_size=64, shuffle=True, drop_last=True)
-val_data_loder = torch.utils.data.DataLoader(list(zip(X_val, Y_val_hot)), batch_size=64, shuffle=True, drop_last=True)
-
-
-'''
-import pennylane as qml
 
 
 def U_4(params, wires):  # 3 params 2 qubit
@@ -177,8 +61,7 @@ def conv_layer1(U, params, Uname):
         U(params[27:30], wires=[9, 0])
 
 
-def U_SU4(weights_0, weights_1, weights_2, weights_3, weights_4, weights_5, weights_6,
-          wires):  # 15 params, Convolutional Circuit 10
+def U_SU4(weights_0, weights_1, weights_2, weights_3, weights_4, weights_5, weights_6, wires):  # 15 params, Convolutional Circuit 10
     qml.U3(*weights_0, wires=wires[0])
     qml.U3(*weights_1, wires=wires[1])
     qml.CNOT(wires=[wires[0], wires[1]])
@@ -198,14 +81,14 @@ def Pooling_ansatz1(weights_0, weights_1, wires):  # 2 params
     qml.CRX(weights_1, wires=[wires[0], wires[1]])
 
 
+
+
 n_qubits = 8
 dev = qml.device("default.qubit", wires=n_qubits)
 Pooling_out = [1, 3, 5, 7]
 
-
 @qml.qnode(dev)
-def qnode(inputs, weights_0, weights_1, weights_2, weights_3, weights_4, weights_5, weights_6, weights_7,
-          weights_8):  # , weights_9, weights_10, weights_11, weights_12, weights_13, weights_14, weights_15, weights_16, weights_17
+def qnode(inputs, weights_0, weights_1, weights_2, weights_3, weights_4, weights_5, weights_6, weights_7, weights_8):  # , weights_9, weights_10, weights_11, weights_12, weights_13, weights_14, weights_15, weights_16, weights_17
     qml.AngleEmbedding(inputs, wires=range(n_qubits))
     # qml.AmplitudeEmbedding(inputs, wires=range(n_qubits), normalize=True)
     # qml.BasicEntanglerLayers(weights, wires=range(n_qubits))
@@ -252,6 +135,7 @@ def qnode(inputs, weights_0, weights_1, weights_2, weights_3, weights_4, weights
     result = [qml.expval(qml.PauliZ(wires=i)) for i in Pooling_out]
     return result
 
+
 weight_shapes = {
     "weights_0": 3,
     "weights_1": 3,
@@ -267,10 +151,10 @@ weight_shapes = {
 clayer_1 = torch.nn.Linear(1016, 8)
 qlayer = qml.qnn.TorchLayer(qnode, weight_shapes)
 clayer_2 = torch.nn.Linear(4, 2)
-#clayer_3 = torch.nn.Linear(128, 2)
-softmax = torch.nn.Softmax(dim=1) #  torch.nn.sigmoid()
-layers = [clayer_1, qlayer, clayer_2, softmax] # clayer_1,
-model = torch.nn.Sequential(*layers)#.to(device)
+# clayer_3 = torch.nn.Linear(128, 2)
+softmax = torch.nn.Softmax(dim=1)  # torch.nn.sigmoid()
+layers = [clayer_1, qlayer, clayer_2, softmax]  # clayer_1,
+model = torch.nn.Sequential(*layers)  # .to(device)
 
 opt = torch.optim.Adam(model.parameters(), lr=0.001)
 loss = torch.nn.CrossEntropyLoss()
@@ -302,7 +186,7 @@ for epoch in range(epochs):
         # print("loss_evaluated:", loss_evaluated)
     avg_loss = running_loss / batches
     print(f"[{epoch}]/[{epochs}] Loss_evaluated: {avg_loss}")
-    
+
     model.eval()
     with torch.no_grad():
         y_pred_tr = model(X_train)
@@ -335,4 +219,3 @@ with torch.no_grad():
 correct = [1 if p == p_true else 0 for p, p_true in zip(predictions, Y_test)]
 accuracy = sum(correct) / len(correct)
 print(f"Accuracy: {accuracy * 100}%")
-'''
