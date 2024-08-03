@@ -14,11 +14,11 @@ class SysMod():
         self.gamma = self.gamma_calculator()
         self.c = self.channel_coefficient_calculator()
     
-    def AP_location(self):
+    def AP_location_genertor(self):
         AP_position = np.zeros((self.num_ap,2))
         return AP_position
     
-    def UE_location(self):
+    def UE_location_generator(self):
         UE_position = np.zeros((self.num_ue,2))
         return UE_position
     
@@ -44,12 +44,11 @@ class SysMod():
         return channel_coeff
     
     # Calculate SINR by calculate numerator and deminorator
-    def SINR_calculator(self):
+    def SINR_calculator(self, pilot_index):
         sinr = np.zeros(self.num_ue)
         return sinr
     
     def dl_rate_calculator(self, pilot_index):
-        dl_rate = np.zeros(self.num_ue)
         sinr = self.SINR_calculator(pilot_index)
         dl_rate = np.log2(1+sinr)
         return dl_rate
