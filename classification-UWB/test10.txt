@@ -83,3 +83,53 @@ Avg_loss_traing: 0.456652
 Acc_training: 0.855625
 Avg_loss_validation: 0.476371
 Acc_validation: 0.826190 
+Epoch : 0.000000
+Avg_loss_traing: 0.540157
+Acc_training: 0.828601
+Avg_loss_validation: 0.492101
+Acc_validation: 0.831667 
+Epoch : 1.000000
+Avg_loss_traing: 0.492635
+Acc_training: 0.844315
+Avg_loss_validation: 0.472721
+Acc_validation: 0.841429 
+Epoch : 2.000000
+Avg_loss_traing: 0.477095
+Acc_training: 0.846935
+Avg_loss_validation: 0.468402
+Acc_validation: 0.841190 
+Epoch : 3.000000
+Avg_loss_traing: 0.470528
+Acc_training: 0.845268
+Avg_loss_validation: 0.475344
+Acc_validation: 0.830952 
+Epoch : 4.000000
+Avg_loss_traing: 0.468035
+Acc_training: 0.856339
+Avg_loss_validation: 0.460020
+Acc_validation: 0.850000 
+Epoch : 5.000000
+Avg_loss_traing: 0.467358
+Acc_training: 0.839286
+Avg_loss_validation: 0.477805
+Acc_validation: 0.826429 
+Epoch : 6.000000
+Avg_loss_traing: 0.463222
+Acc_training: 0.848185
+Avg_loss_validation: 0.465452
+Acc_validation: 0.840952 
+Epoch : 7.000000
+Avg_loss_traing: 0.463632
+Acc_training: 0.851667
+Avg_loss_validation: 0.465165
+Acc_validation: 0.839762 
+Epoch : 8.000000
+Avg_loss_traing: 0.464013
+Acc_training: 0.858274
+Avg_loss_validation: 0.463548
+Acc_validation: 0.836190 
+Epoch : 9.000000
+Avg_loss_traing: 0.460026
+Acc_training: 0.847054
+Avg_loss_validation: 0.472959
+Acc_validation: 0.829762 

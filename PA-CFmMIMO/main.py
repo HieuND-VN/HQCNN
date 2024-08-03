@@ -1,7 +1,7 @@
 import time
 import argparse
 import torch 
-from System Model import SysMod
+from SystemModel import SysMod
 
 if __name__ == "__main__":
     total_start = time.time()
