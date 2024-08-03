@@ -8,8 +8,8 @@ class SysMod():
         self.tau_p = args.tau_p
         self.length = args.length #region from -1 to 1 in both axis (km)
         self.f = args.freq
-        self.h_ap = args.h_ap/1000 #km
-        self.h_ue = args.h_ue/1000 #km
+        self.h_ap = args.h_ap #km
+        self.h_ue = args.h_ue #km
         self.d1 = args.d1
         self.d0 = args.d0
         self.B = self.B
@@ -20,10 +20,10 @@ class SysMod():
         self.eta = self.P / self.num_ue
         self.pilot_index_random = np.random.randint(self.tau_p-1, size = self.num_ue)
 
-        self.AP_position = self.AP_location_generator
+        self.AP_position = self.AP_location_generator()
 
     
-    def AP_location_genertor(self):
+    def AP_location_generator(self):
         sensitivity_1 = 0.1
         sensitivity_2 = 0.2
         AP_position = np.zeros((self.num_ap,1), dtype = "complex")
@@ -41,7 +41,7 @@ class SysMod():
         # beta = np.zeros((self.num_ap, self.num_ue))
         for m in range(self.num_ap):
             for k in range(self.num_ue):
-                if distanceUE2AP[m,n] > self.d1:
+                if distanceUE2AP[m,k] > self.d1:
                     pathloss[m,k] = -self.L - 35*np.log10(distanceUE2AP[m,k])
                 elif distanceUE2AP[m,k] <= self.d1 and distanceUE2AP[m,k] > self.d0:
                     pathloss[m,k] = -self.L -15*np.log10(self.d1) - 20*np.log10(distanceUE2AP[m,k])
@@ -123,4 +123,8 @@ class SysMod():
         distanceUE2AP = self.distance_calculator(UE_position)
         beta = self.LSF_calculator(distanceUE2AP)
         pilot_index = self.greedy_assignment(beta, N = 20)
+        beta_flatten = beta.flatten()
+        pilot_index_flatten = pilot_index.flatten()
+        sample = np.concatenate((beta_flatten, pilot_index_flatten))
+        return sample
 
