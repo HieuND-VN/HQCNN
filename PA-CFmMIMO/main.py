@@ -30,8 +30,6 @@ if __name__ == "__main__":
     parser.add_argument('-batch', "--batch_size", type=int, default=12, help="Size of batch data")
 
     args = parser.parse_args()
-    # if args.device == "cuda" and not torch.cuda.is_available():
-    #     print("\ncuda is not available.\n")
     system = SysMod(args)
 
     total_sample = args.training_sample + args.validating_sample + args.testing_sample
