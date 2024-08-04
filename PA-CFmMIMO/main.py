@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     system = SysMod(args)
-
+    #
     total_sample = args.training_sample + args.validating_sample + args.testing_sample
     data = []
     for i in range(total_sample):
