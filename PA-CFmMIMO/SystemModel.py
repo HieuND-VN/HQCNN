@@ -3,22 +3,23 @@ import numpy as np
 
 class SysMod():
     def __init__(self, args):
-        self.num_ap = args.num_ap
-        self.num_ue = args.num_ue
-        self.tau_p = args.tau_p
-        self.length = args.length #region from -1 to 1 in both axis (km)
-        self.f = args.freq
-        self.h_ap = args.h_ap #km
-        self.h_ue = args.h_ue #km
-        self.d1 = args.d1
-        self.d0 = args.d0
-        self.B = self.B
+        self.num_ap = args.number_AP
+        self.num_ue = args.number_UE
+        self.tau_p = args.pilot_length
+        self.length = args.area_length #region from -1 to 1 in both axis (km)
+        self.f = args.frequency
+        self.h_ap = args.height_AP #km
+        self.h_ue = args.height_UE #km
+        self.d1 = args.distance1
+        self.d0 = args.distance0
+        self.B = args.bandwidth
         self.L = 46.5 + 33.9*np.log10(self.f) - 13.82*np.log10(self.h_ap) - (1.1*np.log10(self.f) - 0.7)*self.h_ue + (1.56*np.log10(self.f) - 0.8)
         self.Pd = (self.B*10**(-17.4)*10**(-3))**-1
-        self.p = args.p #1mW, Power UL of pilot signal
-        self.P = args.P #mW, Power Downlink in each AP
+        self.p = args.power_pilot #1mW, Power UL of pilot signal
+        self.P = args.power_AP #mW, Power Downlink in each AP
         self.eta = self.P / self.num_ue
         self.pilot_index_random = np.random.randint(self.tau_p-1, size = self.num_ue)
+        self.batch_size = args.batch_size
 
         self.AP_position = self.AP_location_generator()
 
@@ -27,14 +28,14 @@ class SysMod():
         sensitivity_1 = 0.1
         sensitivity_2 = 0.2
         AP_position = np.zeros((self.num_ap,1), dtype = "complex")
-        theta = np.linsapce(0,2*np.pi,self.num_ap)
+        theta = np.linspace(0,2*np.pi,self.num_ap)
         for i in range(self.num_ap):
             AP_position[i] = self.length * sensitivity_1 * np.cos(theta[i]) + 1j * self.length * sensitivity_2 * np.sin(theta[i])
         return AP_position
 
     def distance_calculator(self, UE_position):
         diff = self.AP_position[:, np.newaxis] - UE_position[np.newaxis, :]
-        return (np.sqrt(np.real(diff) ** 2 + np.imag(diff) ** 2)).reshape(10, 8)
+        return (np.sqrt(np.real(diff) ** 2 + np.imag(diff) ** 2)).reshape(self.num_ap, self.num_ue)
 
     def LSF_calculator(self, distanceUE2AP):
         pathloss = np.zeros((self.num_ap, self.num_ue))
@@ -104,8 +105,21 @@ class SysMod():
         gamma = np.sqrt(self.tau_p * self.p) * beta * c_mk
         sinr = self.sinr_calculator(pilot_index, beta, gamma, c_mk)
         return np.log2(1+sinr)
+
+    def sum_dl_rate_calculator(self,beta, pilot_index, i):
+        sum_rate_batch = 0
+        pilot_index = pilot_index.detach().numpy() #(batch_size, num_ue, tau_p)
+        pilot_index = np.argmax(pilot_index, axis=-1)
+        # print(f'{i}.. pilot_index information: {np.shape(pilot_index)}')
+        beta = beta.numpy()
+        beta = beta.reshape(self.batch_size, self.num_ap, self.num_ue)
+        for i in range(len(beta)):
+            sum_rate_batch += np.sum(self.dl_rate_calculator(pilot_index[i], beta[i]))
+        return sum_rate_batch
     def greedy_assignment(self, beta, N):
-        pilot_index = self.pilot_index_random
+        # So sánh với random Pilot-Assignment thì sẽ so với 2 initial pilot_index như nhau
+        # pilot_index = self.pilot_index_random
+        pilot_index = np.random.randint(self.tau_p-1, size = self.num_ue)
         for n in range(N):
             dl_rate = self.dl_rate_calculator(pilot_index, beta)
             k_star = np.argmin(dl_rate)
@@ -116,15 +130,19 @@ class SysMod():
                         if (k != k_star) and (pilot_index[k] == tau):
                             sum_beta[tau] += beta[m, k]
             pilot_index[k_star] = np.argmin(sum_beta)
-        return pilot_index
+            if (n == N-1):
+                sum_rate = np.sum(self.dl_rate_calculator(pilot_index, beta))
+        return pilot_index, sum_rate
 
     def data_sample_generator(self):
         UE_position = np.random.uniform(low=-self.length, high=self.length, size=self.num_ue) + 1j*np.random.uniform(low=-self.length, high=self.length, size=self.num_ue)
         distanceUE2AP = self.distance_calculator(UE_position)
+        # print(f'[{i}] - distanceUE2AP: {distanceUE2AP}')
         beta = self.LSF_calculator(distanceUE2AP)
-        pilot_index = self.greedy_assignment(beta, N = 20)
+        pilot_index, sum_rate = self.greedy_assignment(beta, N = 20)
+
         beta_flatten = beta.flatten()
         pilot_index_flatten = pilot_index.flatten()
-        sample = np.concatenate((beta_flatten, pilot_index_flatten))
+        sample = np.concatenate((np.array([sum_rate]), beta_flatten, pilot_index_flatten))
         return sample
 

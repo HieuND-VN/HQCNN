@@ -17,8 +17,7 @@ class HQCNN():
         self.num_ue = args.num_ue
         self.tau_p = args.tau_p
 
-    def training_generator(self):
-        data =
+
 
 
 

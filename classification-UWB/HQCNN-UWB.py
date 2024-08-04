@@ -51,100 +51,65 @@ def import_from_files():
 
     return output_arr
 data = import_from_files()
-print(f'------- data[0]: {np.shape(data[0])}')
-test_data = data[37800:, :]
-print(f'test dataset: {test_data.shape}') #testing is 4200 samples cuoi cung
-trainval_data = data[:37800, :]
-print(f'train-val dataset: {trainval_data.shape}') #training and validating dataset is 37800 samples dau tien
 
+
+
+test_data = data[37800:, :]
+trainval_data = data[:37800, :]
+#---------------------------------------------------------------#
 x_train = trainval_data[:33600, 15:]
 x_train = x_train
 y_train = trainval_data[:33600, 0]
-
+#---------------------------------------------------------------#
 x_test = test_data[:, 15:]
 x_test = x_test
 y_test = test_data[:, 0]
-
+#---------------------------------------------------------------#
 x_val = trainval_data[33600:, 15:]
 y_val = trainval_data[33600:, 0]
-
-print("=" * 30)
-# print(f'data shape: {data.shape}')
-# print(f'data type: {type(data)}')
-# print(f'data sample [0] - type: {type(data[0])}')
-# print(f'data sample [0] - length: {len(data[0])}')
-# print(f'data sample [0 content: {data[0]}')
-
-print("=" * 30)
-# print(f'\nTRAINING')
-# print(f"x_train.shape: {x_train.shape}")
-# print(f"x_train.type: {type(x_train)}")
-# print(f"y_train.shape: {y_train.shape}")
-# print(f"y_train.type: {type(y_train)}")
-print(f'\nVALIDATING')
-# print(f"x_val.shape: {x_val.shape}")
-print(f"y_val.shape: {y_val.shape}")
-print(f"y_val.type: {type(y_val)}")
-print(f'y_val[0:50]: {y_val[0:10]}')
-y_val_test = np.array([0., 1., 1., 0., 1., 1., 1., 1., 0., 1.])
-print(y_val_test==y_val[0:10])
-# print(f'\nTESTING')
-# print(f"x_test.shape: {x_test.shape}")
-# print(f"y_test.shape: {y_test.shape}")
-print("=" * 30)
-
+#---------------------------------------------------------------#
 x_train_filter_01 = np.where((y_train == 0) | (y_train == 1))
-print(x_train_filter_01)
 x_val_filter_01 = np.where((y_val == 0) | (y_val == 1))
 x_test_filter_01 = np.where((y_test == 0) | (y_test == 1))
-
+#---------------------------------------------------------------#
 X_train, X_val, X_test = x_train[x_train_filter_01], x_val[x_val_filter_01], x_test[x_test_filter_01]
-print("_" * 30)
-# print(f'X_train - type: {type(X_train)}')
-# print(f'X_train - shape: {np.shape(X_train)}')
-# print(f'len(X_train): {len(X_train)}')
-# print(f'X_train[0] - type: {type(X_train[0])}')
-# print(f'X_train[0] - shape: {np.shape(X_train[0])}')
-
-# x_axis = np.linspace(0,len(X_train[0]), len(X_train[0]))
-# plt.scatter(x_axis, X_train[0])
-# plt.show()
 Y_train, Y_val, Y_test = y_train[x_train_filter_01], y_val[x_val_filter_01], y_test[x_test_filter_01]
-print(f'\t\t Y_val - type: {type(Y_val)}')
-print(f'\t\t Y_val - type: {np.shape(Y_val)}')
-Y_train = [1 if y == 1 else 0 for y in Y_train]
-Y_val_1 = [1 if y == 1 else 0 for y in Y_val]
+#---------------------------------------------------------------#
+Y_train_1 = [1 if y == 1 else 0 for y in Y_train]
 Y_val = [1 if y == 1 else 0 for y in Y_val]
-print(f'\t\t\t Y_val - type: {type(Y_val)}')
-print(f'\t\t\t Y_val - type: {np.shape(Y_val)}')
-print(f'Compare {Y_val_1 == Y_val} - {y_val == Y_val}')
 Y_test = [1 if y == 1 else 0 for y in Y_test]
-print(f'\tY_train - type: {type(Y_train)}')
-print(f'\tY_train - shape: {np.shape(Y_train)}')
-print(f'\tY_train[0] - type: {type(Y_train[0])}')
-# print(f'\tY_train[0] - shape: {Y_train}')
-
-
-
-Y_train_ = torch.unsqueeze(torch.tensor(Y_train), 1)
+#---------------------------------------------------------------#
+Y_train_ = torch.unsqueeze(torch.tensor(Y_train_1), 1)
 Y_val_ = torch.unsqueeze(torch.tensor(Y_val), 1)
-print(f'Y_val_: {Y_val_.shape}')
 Y_test_ = torch.unsqueeze(torch.tensor(Y_test), 1)
+#---------------------------------------------------------------#
 Y_train_hot = torch.scatter(torch.zeros((len(X_train), 2)), 1, Y_train_, 1)
 Y_val_hot = torch.scatter(torch.zeros((len(X_val), 2)), 1, Y_val_, 1)
-print(len(X_val))
-print(f'Y_val_hot - TYPE: {type(Y_val_hot)}')
-print(f'Y_val_hot - shape: {Y_val_hot.shape}')
-print(f'Y_val_hot[0]: {Y_val_hot[0]}')
 Y_test_hot = torch.scatter(torch.zeros((len(X_test), 2)), 1, Y_test_, 1)
+#---------------------------------------------------------------#
+X_train_1 = torch.tensor(X_train).float()
+X_val_1 = torch.tensor(X_val).float()
+X_test_1 = torch.tensor(X_test).float()
+#---------------------------------------------------------------#
+data_loader = torch.utils.data.DataLoader(list(zip(X_train_1, Y_train_hot)), batch_size=64, shuffle=True, drop_last=True)
+val_data_loder = torch.utils.data.DataLoader(list(zip(X_val_1, Y_val_hot)), batch_size=64, shuffle=True, drop_last=True)
+#---------------------------------------------------------------#
 
-X_train = torch.tensor(X_train).float()
-X_val = torch.tensor(X_val).float()
-X_test = torch.tensor(X_test).float()
-data_loader = torch.utils.data.DataLoader(
-    list(
-        zip(X_train, Y_train_hot)), batch_size=64, shuffle=True, drop_last=True)
-val_data_loder = torch.utils.data.DataLoader(list(zip(X_val, Y_val_hot)), batch_size=64, shuffle=True, drop_last=True)
+print(f'<Total dataset> TYPE: {type(data)} / SHAPE: {data.shape}')
+print(f'<Total dataset[0]> TYPE: {type(data[0])} / SHAPE: {data[0].shape}')
+print('___________________________________________________________________________________________')
+print(f'\t\t Training dataset......')
+print(f'x_train: TYPE-{type(x_train)} / SHAPE-{np.shape(x_train)} / VALUE-{x_train[0][0:20]}')
+print(f'x_train_filter: TYPE-{type(x_train_filter_01)} / SHAPE-{np.shape({type(x_train_filter_01)})} / VALUE-{x_train_filter_01}')
+print(f'X_train: TYPE-{type(X_train)} / SHAPE-{np.shape(X_train)} / VALUE-{X_train[0][0:20]}')
+print(f'X_train_1: TYPE-{type(X_train_1)} / SHAPE-{np.shape(X_train_1)} / VALUE-{X_train_1[0][0:20]}')
+print(f'\n')
+print(f'y_train: TYPE-{type(y_train)} / SHAPE-{np.shape(y_train)} / VALUE-{y_train[0:10]}')
+print(f'Y_train: TYPE-{type(Y_train)} / SHAPE-{np.shape(Y_train)} / VALUE-{Y_train[0:10]}')
+print(f'Y_train_1: TYPE-{type(Y_train_1)} / SHAPE-{np.shape(Y_train_1)}/ VALUE-{Y_train_1[0:10]}')
+print(f'Y_train_: TYPE-{type(Y_train_)} / SHAPE-{np.shape(Y_train_)}/ VALUE-{Y_train_[0:10]}')
+print(f'Y_train_hot: TYPE-{type(Y_train_hot)} / SHAPE-{np.shape(Y_train_hot)}/ VALUE-{Y_train_hot[0:10]}')
+print('___________________________________________________________________________________________')
 
 
 '''
