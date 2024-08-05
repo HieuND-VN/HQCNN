@@ -2,10 +2,10 @@ import time
 import argparse
 import torch
 import numpy as np
-from SystemModel import SysMod
 import torch.nn.functional as F
 from torchsummary import summary as summary
-
+from SystemModel import SysMod
+from
 if __name__ == "__main__":
     total_start = time.time()
     parser = argparse.ArgumentParser()
@@ -31,7 +31,56 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     system = SysMod(args)
-    #
+    '''
+    Generate dataset as csv file, so next time I can easily use it
+    The structure of data set is like
+    
+    -------------------------------------------------------------------------------------------
+    | sum_rate | min_rate | beta with size [num_ap]*[num_ue] | pilot_index with size [num_ue] |
+    -------------------------------------------------------------------------------------------
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    |          |          |                                  |                                |
+    -------------------------------------------------------------------------------------------
+    '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # ------------------------------------------------------------------------------------ #
+    '''
     total_sample = args.training_sample + args.validating_sample + args.testing_sample
     data = []
     for i in range(total_sample):
@@ -259,3 +308,6 @@ if __name__ == "__main__":
     # correct = [1 if p == p_true else 0 for p, p_true in zip(predictions, Y_test)]
     # accuracy = sum(correct) / len(correct)
     # print(f"Accuracy: {accuracy * 100}%")
+    
+    
+    '''
