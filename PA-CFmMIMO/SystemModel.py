@@ -131,18 +131,20 @@ class SysMod():
                             sum_beta[tau] += beta[m, k]
             pilot_index[k_star] = np.argmin(sum_beta)
             if (n == N-1):
-                sum_rate = np.sum(self.dl_rate_calculator(pilot_index, beta))
-        return pilot_index, sum_rate
+                rate_list = self.dl_rate_calculator(pilot_index, beta)
+                sum_rate = np.sum(rate_list)
+                min_rate = np.min(rate_list)
+        return pilot_index, sum_rate, min_rate
 
     def data_sample_generator(self):
         UE_position = np.random.uniform(low=-self.length, high=self.length, size=self.num_ue) + 1j*np.random.uniform(low=-self.length, high=self.length, size=self.num_ue)
         distanceUE2AP = self.distance_calculator(UE_position)
         # print(f'[{i}] - distanceUE2AP: {distanceUE2AP}')
         beta = self.LSF_calculator(distanceUE2AP)
-        pilot_index, sum_rate = self.greedy_assignment(beta, N = 20)
+        pilot_index, sum_rate, min_rate = self.greedy_assignment(beta, N = 20)
 
         beta_flatten = beta.flatten()
         pilot_index_flatten = pilot_index.flatten()
-        sample = np.concatenate((np.array([sum_rate]), beta_flatten, pilot_index_flatten))
+        sample = np.concatenate((np.array([sum_rate]), np.array([min_rate]), beta_flatten, pilot_index_flatten))
         return sample
 
